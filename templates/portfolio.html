@@ -1,0 +1,35 @@
+{% include 'header.html' %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Portfolio</title>
+</head>
+<body>
+<!--Container for housing all portfolio pieces-->
+<div class="container">
+    <h1>Developer Portfolio Pieces</h1>
+<div style="padding: 0rem 0.5rem 1rem 0rem">
+    <button class="button">
+        <a style="color: #36454F;" href="{{ url_for('add_piece') }}">Add New Piece to Portfolio</a>
+</button>
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <!--Loop through portfolio pieces to display-->
+    {% for piece in all_pieces: %}
+        <div class="col">
+            <div class="card">
+                <img src="{{ piece.img }}" class="card-img-top rounded-4" height="225" style="preserveAspectRatio:xMidYMid slice;">
+                    <h1 class="card-title">{{ piece.title }}</h1>
+                <div class="card-body" style="padding-top: 0px;">
+                    <p style="margin-top: 0px;">{{ piece.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="card-text"><i>{{ piece.elements }}</i></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+</div>
+</body>
+{% include 'footer.html' %}
