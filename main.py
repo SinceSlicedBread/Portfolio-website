@@ -150,7 +150,7 @@ def register():
 
 @app.route('/logout')
 def logout():
-    load_user()
+    logout_user()
     return redirect(url_for('home'))
 
 @app.route('/portfolio/add', methods = ['GET','POST'])

@@ -8,11 +8,13 @@
 <!--Container for housing all portfolio pieces-->
 <div class="container">
     <h1>Developer Portfolio Pieces</h1>
-<div style="padding: 0rem 0.5rem 1rem 0rem">
+{% if current_user.is_authenticated: %}
+    <div style="padding: 0rem 0.5rem 1rem 0rem">
     <button class="button">
         <a style="color: #36454F;" href="{{ url_for('add_piece') }}">Add New Piece to Portfolio</a>
-</button>
-</div>
+    </button>
+    </div>
+{% endif %}
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     <!--Loop through portfolio pieces to display-->
     {% for piece in all_pieces: %}
