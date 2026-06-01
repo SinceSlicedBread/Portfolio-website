@@ -1,0 +1,35 @@
+{% include 'header.html' %}
+{% from "bootstrap5/form.html" import render_form %}
+
+<head>
+    <title>{{ piece.title }}</title>
+</head>
+<main>
+    <h1> {{ piece.title }}</h1>
+    <h2> {{ piece.elements }}</h2>
+    <h3> {{ piece.description }}</h3>
+
+    <!-- Comments Area -->
+        {{ ckeditor.load() }}
+        <!-- Configure it with the name of the form field from CommentForm -->
+        {{ ckeditor.config(name='text') }}
+        <!-- Create the wtf quick form from CommentForm -->
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <div class="comment">
+          <ul class="commentList">
+            <!-- Show all comments -->
+            {% for comment in piece.comments: %}
+            <li>
+              <div class="commentText">
+                {{comment.text|safe}}
+                <span class="sub-text">{{comment.comment_author.name}}</span>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+
+        </div>
+
+</main>
+
+{% include "footer.html" %}

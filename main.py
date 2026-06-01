@@ -4,7 +4,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email
 from flask_bootstrap import Bootstrap5
+from flask_ckeditor import CKEditor
 from flask import flash
+from flask_ckeditor import CKEditorField
 import smtplib
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -20,6 +22,7 @@ PASSWORD = os.environ.get("PASSWORD")
 app = Flask(__name__)
 Bootstrap5(app)
 app.config['SECRET_KEY'] = os.environ.get("FLASK_KEY")
+ckeditor = CKEditor(app)
 
 # Create and initialise login manager
 login_manager = LoginManager()
@@ -101,6 +104,10 @@ class AddPieceForm(FlaskForm):
     img = StringField(label='Cover Image')
     submit = SubmitField(label='Add Piece')
 
+class CommentForm(FlaskForm):
+    text = CKEditorField("Comment", validators=[DataRequired()])
+    submit = SubmitField("Submit Comment")
+
 @app.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -167,7 +174,8 @@ def add_piece():
             piece = Piece(title=title,
                           elements=elements,
                           description=description,
-                          img=img)
+                          img=img,
+                          author=current_user)
             db.session.add(piece)
             db.session.commit()
         return redirect(url_for('portfolio'))
@@ -183,7 +191,25 @@ def portfolio():
     with app.app_context():
         result = db.session.execute(db.select(Piece))
         all_pieces = result.scalars().all()
-    return render_template('portfolio.html', all_pieces=all_pieces)
+    return render_template('portfolio.html', all_pieces=all_pieces, current_user=current_user)
+
+@app.route('/portfolio/<int:piece_id>', methods=['GET', 'POST'])
+def show_piece(piece_id):
+    piece = db.get_or_404(Piece, piece_id)
+    form = CommentForm()
+    if form.validate_on_submit():
+        if not current_user.is_authenticated:
+            flash("Please log in to be able to comment.")
+            return redirect(url_for('login.html'))
+        else:
+            new_comment = Comment(
+                text=form.text.data,
+                comment_author=current_user,
+                parent_post=piece,
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+    return render_template('piece.html', piece=piece, form=form, current_user=current_user)
 
 @app.route('/contact', methods = ['GET','POST'])
 def contact():
