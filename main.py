@@ -5,6 +5,7 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, Email
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
+from flask_avatars import Avatars
 from flask import flash
 from flask_ckeditor import CKEditorField
 import smtplib
@@ -31,6 +32,8 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return db.get_or_404(User, user_id)
+
+avatars = Avatars(app)
 
 # Database for portfolio pieces
 class Base(DeclarativeBase):
