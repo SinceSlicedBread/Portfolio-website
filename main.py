@@ -54,6 +54,7 @@ class Piece(db.Model):
     description: Mapped[str] = mapped_column(String, nullable=False)
     img: Mapped[str] = mapped_column(String)
     comments = relationship("Comment", back_populates="parent_post")
+    git: Mapped[str] = mapped_column(String)
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -76,8 +77,8 @@ class Comment(db.Model):
 
 
 ## Run this code only the first time to create database file
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 # Register form
 class RegisterForm(FlaskForm):
@@ -105,6 +106,7 @@ class AddPieceForm(FlaskForm):
     elements = StringField(label='Software Elements', validators=[DataRequired()])
     description = StringField(label='Description', validators=[DataRequired()])
     img = StringField(label='Cover Image')
+    git = StringField(label='GitHub URL')
     submit = SubmitField(label='Add Piece')
 
 class CommentForm(FlaskForm):
@@ -172,13 +174,15 @@ def add_piece():
         elements = request.form.get('elements')
         description = request.form.get('description')
         img = request.form.get('img')
+        git = request.form.get('git')
         print(f'{title}\n{elements}\n{description}\n{img}')
         with app.app_context():
             piece = Piece(title=title,
                           elements=elements,
                           description=description,
                           img=img,
-                          author=current_user)
+                          author=current_user,
+                          git=git)
             db.session.add(piece)
             db.session.commit()
         return redirect(url_for('portfolio'))
@@ -199,6 +203,7 @@ def portfolio():
 @app.route('/portfolio/<int:piece_id>', methods=['GET', 'POST'])
 def show_piece(piece_id):
     piece = db.get_or_404(Piece, piece_id)
+    git_url = piece.git
     form = CommentForm()
     if form.validate_on_submit():
         if not current_user.is_authenticated:
@@ -212,7 +217,7 @@ def show_piece(piece_id):
             )
             db.session.add(new_comment)
             db.session.commit()
-    return render_template('piece.html', piece=piece, form=form, current_user=current_user)
+    return render_template('piece.html', piece=piece, form=form, current_user=current_user, git_url=git_url)
 
 @app.route('/contact', methods = ['GET','POST'])
 def contact():
