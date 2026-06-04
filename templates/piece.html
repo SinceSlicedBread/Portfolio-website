@@ -13,12 +13,12 @@
         <h1> {{ piece.title }}</h1>
         <h3> {{ piece.elements }}</h3>
         <p> {{ piece.description }}</p>
-        <button type="button" class="btn btn-info">
-            <a href="https://{{ git_url }}" target="_blank" rel="noopener noreferrer">View on GitHub </a>
+        <button type="button" class="btn btn-info" style="background: #0086a2; border: 0">
+            <a href="{{ git_url }}" target="_blank" rel="noopener noreferrer">View on GitHub </a>
         </button>
     </div>
     <!-- Comments Area -->
-    <div class="container">
+    <div class="container p-3">
         {{ ckeditor.load() }}
         <!-- Configure it with the name of the form field from CommentForm -->
         {{ ckeditor.config(name='text') }}
