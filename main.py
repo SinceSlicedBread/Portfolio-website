@@ -187,7 +187,13 @@ def add_piece():
             db.session.commit()
         return redirect(url_for('portfolio'))
     return render_template('add.html', form=my_form)
-## END OF admin SECTION
+
+@app.route('/delete/<int:piece_id>')
+def delete_piece(piece_id):
+    piece_to_delete = db.get_or_404(Piece, piece_id)
+    db.session.delete(piece_to_delete)
+    db.session.commit()
+    return redirect(url_for('portfolio'))
 
 @app.route('/')
 def home():
