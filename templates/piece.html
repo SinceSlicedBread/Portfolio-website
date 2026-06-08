@@ -20,9 +20,7 @@
     <!-- Comments Area -->
     <div class="container p-3">
         {{ ckeditor.load() }}
-        <!-- Configure it with the name of the form field from CommentForm -->
         {{ ckeditor.config(name='text') }}
-        <!-- Create the wtf quick form from CommentForm -->
         {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         <div class="comment">
           <ul class="commentList">
