@@ -18,7 +18,7 @@
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
     <!--Loop through portfolio pieces to display-->
     {% for piece in all_pieces: %}
-        <div class="col">
+        <div class="col mt-2">
             <div class="card">
                 <a href="{{ url_for('show_piece', piece_id=piece.id) }}">
                     <img src="{{ piece.img }}" class="card-img-top rounded-4" height="225" style="preserveAspectRatio:xMidYMid slice;">
