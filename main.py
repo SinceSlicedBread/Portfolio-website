@@ -169,7 +169,7 @@ def logout():
 def add_piece():
     my_form = AddPieceForm()
     if my_form.validate_on_submit():
-        flash('Successfully Loaded to Database!')
+        #flash('Successfully Loaded to Database!')
         title = request.form.get('title')
         elements = request.form.get('elements')
         description = request.form.get('description')
@@ -247,4 +247,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
